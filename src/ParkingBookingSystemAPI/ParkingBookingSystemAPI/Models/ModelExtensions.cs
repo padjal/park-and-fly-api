@@ -1,4 +1,5 @@
 ﻿using ParkingBookingSystemAPI.Dtos;
+using ParkingBookingSystemAPI.Dtos.Requests;
 
 namespace ParkingBookingSystemAPI.Models
 {
@@ -7,7 +8,6 @@ namespace ParkingBookingSystemAPI.Models
         public static ReservationDto ToDto(this Reservation reservation)
         {
             return new ReservationDto(
-                reservation.UserId,
                 reservation.ParkingId,
                 reservation.CarId,
                 reservation.From,
@@ -15,15 +15,39 @@ namespace ParkingBookingSystemAPI.Models
                 );
         }
 
-        public static Reservation ToBase(this ReservationDto reservationDto)
+        public static Reservation ToBase(this ReservationDto reservationDto, string userId)
         {
             return new Reservation()
             {
-                UserId = reservationDto.UserId,
+                UserId = userId,
                 ParkingId = reservationDto.ParkingId,
                 CarId = reservationDto.CarId,
                 From = reservationDto.From,
                 To = reservationDto.To,
+            };
+        }
+
+        public static Car ToBase(this AddCarRequest carRequest, string userId)
+        {
+            return new Car()
+            {
+                RegistrationNumber = carRequest.RegistrationNumber,
+                Color = carRequest.Color,
+                Type = carRequest.Type,
+                OwnerId = userId,
+            };
+        }
+
+        public static Parking ToBase(this AddParkingRequest parkingRequest)
+        {
+            return new Parking()
+            {
+                Name = parkingRequest.Name,
+                Address = parkingRequest.Address,
+                City = parkingRequest.City,
+                Country = parkingRequest.Country,
+                Phone = parkingRequest.Phone,
+                MaxCars = parkingRequest.MaxCars
             };
         }
     }

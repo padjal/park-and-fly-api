@@ -1,7 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
+using System.Security.Claims;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -11,17 +14,18 @@ using ParkingBookingSystemAPI.Models;
 namespace ParkingBookingSystemAPI.Controllers
 {
     [Route("api/v1/[controller]")]
+    [Authorize]
     [ApiController]
-    public class ReservationsController : ControllerBase
+    public class ReservationController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
 
-        public ReservationsController(ApplicationDbContext context)
+        public ReservationController(ApplicationDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Reservations
+        // GET: api/Reservation
         [HttpGet]
         public async Task<ActionResult<IEnumerable<ReservationDto>>> GetReservations()
         {
@@ -32,7 +36,7 @@ namespace ParkingBookingSystemAPI.Controllers
             return dtos;
         }
 
-        // GET: api/Reservations/5
+        // GET: api/Reservation/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ReservationDto>> GetReservation(string id)
         {
@@ -46,7 +50,7 @@ namespace ParkingBookingSystemAPI.Controllers
             return reservation.ToDto();
         }
 
-        // PUT: api/Reservations/5
+        // PUT: api/Reservation/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
         public async Task<IActionResult> PutReservation(Guid id, ReservationDto reservationDto)
@@ -58,7 +62,7 @@ namespace ParkingBookingSystemAPI.Controllers
                 return NotFound();
             }
 
-            reservation.UserId = reservationDto.UserId;
+            reservation.UserId = "dsfsdf";
             reservation.ParkingId = reservationDto.ParkingId;
             reservation.CarId = reservationDto.CarId;
             reservation.From = reservationDto.From;
@@ -90,7 +94,10 @@ namespace ParkingBookingSystemAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Reservation>> PostReservation(ReservationDto reservationDto)
         {
-            var reservation = reservationDto.ToBase();
+            //Get userId from
+            string userId = User.FindFirst(ClaimTypes.NameIdentifier).Value;
+
+            var reservation = reservationDto.ToBase(userId);
 
             _context.Reservations.Add(reservation);
 
@@ -98,9 +105,10 @@ namespace ParkingBookingSystemAPI.Controllers
             {
                 await _context.SaveChangesAsync();
             }
-            catch (DbUpdateException)
+            catch (DbUpdateException e)
             {
                 // TODO: Log
+                return null;
             }
 
             return CreatedAtAction("GetReservation", new { id = reservation.Id }, reservation);
