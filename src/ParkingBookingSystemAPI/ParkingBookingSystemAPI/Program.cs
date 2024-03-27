@@ -27,7 +27,7 @@ namespace ParkingBookingSystemAPI
             builder.Services.AddAuthentication()
             .AddJwtBearer(options =>
             {
-                options.Authority = "https://localhost:8080";
+                options.Authority = "https://localhost:7221";
 
                 options.TokenValidationParameters = new TokenValidationParameters
                 {
@@ -71,9 +71,6 @@ namespace ParkingBookingSystemAPI
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
-            app.UseSwagger();
-            app.UseSwaggerUI();
 
             app.UseHttpsRedirection();
 
