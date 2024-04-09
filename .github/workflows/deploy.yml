@@ -36,7 +36,7 @@ jobs:
           username: ${{ secrets.SSH_USERNAME }}
           key: ${{ secrets.SSH_KEY }}
           script: |
-            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/park-and-fly-api:latest
-            docker stop park-and-fly-api || true
-            docker rm park-and-fly-api || true
-            docker run -d -p 8080:8080 --name park-and-fly-api ${{ secrets.DOCKERHUB_USERNAME }}/park-and-fly-api:latest
+            sudo docker pull ${{ secrets.DOCKERHUB_USERNAME }}/park-and-fly-api:latest
+            sudo docker stop park-and-fly-api || true
+            sudo docker rm park-and-fly-api || true
+            sudo docker run -d -p 8080:8080 --name park-and-fly-api ${{ secrets.DOCKERHUB_USERNAME }}/park-and-fly-api:latest
