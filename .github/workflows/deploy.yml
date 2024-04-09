@@ -21,7 +21,7 @@ jobs:
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
     - name: Push the image to Docker Hub
-      run: docker push docker-hub-username/container-name
+      run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/park-and-fly-api:latest
 
     - name: Pull the image to VM
       uses: appleboy/ssh-action@v1.0.0
