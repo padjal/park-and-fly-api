@@ -33,7 +33,8 @@ namespace ParkingBookingSystemAPI.Models
             {
                 RegistrationNumber = carRequest.RegistrationNumber,
                 Color = carRequest.Color,
-                Type = carRequest.Type,
+                Brand = carRequest.Brand,
+                Model = carRequest.Model,
                 OwnerId = userId,
             };
         }

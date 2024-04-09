@@ -11,7 +11,7 @@ namespace ParkingBookingSystemAPI.Models
         {
         }
 
-        public DbSet<ApplicationUser> Users { get; set; } = null!;
+        override public DbSet<ApplicationUser> Users { get; set; } = null!;
         public DbSet<Parking> Parkings{ get; set; } = null!;
         public DbSet<Car> Cars{ get; set; } = null!;
         public DbSet<Reservation> Reservations{ get; set; } = null!;
