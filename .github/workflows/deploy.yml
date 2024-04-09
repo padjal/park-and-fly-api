@@ -11,7 +11,7 @@ jobs:
     - uses: actions/checkout@v3
     
     - name: Build the Docker image
-      working-directory: Dockerized/Hello
+      working-directory: src/ParkingBookingSystemAPI/
       run: docker build . -t padjal1/park-and-fly-api:latest
 
     - name: Log into Docker Hub
