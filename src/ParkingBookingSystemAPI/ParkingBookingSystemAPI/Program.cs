@@ -61,8 +61,6 @@ namespace ParkingBookingSystemAPI
 
             app.MapIdentityApi<ApplicationUser>();
 
-            app.Ensure
-
             // Configure the HTTP request pipeline.
             /*if (app.Environment.IsDevelopment())
             {
