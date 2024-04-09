@@ -5,7 +5,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  deploy:
+  publish:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v3
@@ -23,14 +23,20 @@ jobs:
     - name: Push the image to Docker Hub
       run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/park-and-fly-api:latest
 
-    - name: Pull the image to VM
-      uses: appleboy/ssh-action@v1.0.0
-      with:
-        host: ${{ secrets.SSH_HOST }}
-        username: ${{ secrets.SSH_USERNAME }}
-        key: ${{ secrets.SSH_KEY }}
-        script: 
-          docker pull ${{ secrets.DOCKERHUB_USERNAME }}/park-and-fly-api:latest
-          docker stop park-and-fly-api || true
-          docker rm park-and-fly-api || true
-          docker run -d -p 8080:8080 --name park-and-fly-api ${{ secrets.DOCKERHUB_USERNAME }}/park-and-fly-api:latest
+  deploy:
+    needs: publish
+    name: deploy image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Pull the image to VM
+        uses: appleboy/ssh-action@v1.0.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/park-and-fly-api:latest
+            docker stop park-and-fly-api || true
+            docker rm park-and-fly-api || true
+            docker run -d -p 8080:8080 --name park-and-fly-api ${{ secrets.DOCKERHUB_USERNAME }}/park-and-fly-api:latest
