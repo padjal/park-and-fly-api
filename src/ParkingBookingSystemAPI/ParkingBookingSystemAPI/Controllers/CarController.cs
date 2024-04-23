@@ -23,9 +23,14 @@ namespace ParkingBookingSystemAPI.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Car>>> GetCars()
+        public async Task<ActionResult<IEnumerable<Car>>> GetCars(string? userId)
         {
-            return await _context.Cars.ToListAsync();
+            if(userId == null)
+            {
+                return await _context.Cars.ToListAsync();
+            }
+
+            return await _context.Cars.Where(c => c.OwnerId == userId).ToListAsync();
         }
 
         [HttpPost]

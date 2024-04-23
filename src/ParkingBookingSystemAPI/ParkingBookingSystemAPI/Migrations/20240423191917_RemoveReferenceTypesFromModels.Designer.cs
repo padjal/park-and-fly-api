@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ParkingBookingSystemAPI.Models;
@@ -11,9 +12,11 @@ using ParkingBookingSystemAPI.Models;
 namespace ParkingBookingSystemAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240423191917_RemoveReferenceTypesFromModels")]
+    partial class RemoveReferenceTypesFromModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -327,6 +330,8 @@ namespace ParkingBookingSystemAPI.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
+                    b.HasIndex("CarId");
+
                     b.HasIndex("ParkingId");
 
                     b.ToTable("Reservations");
@@ -396,6 +401,12 @@ namespace ParkingBookingSystemAPI.Migrations
                         .WithMany("Reservations")
                         .HasForeignKey("ApplicationUserId");
 
+                    b.HasOne("ParkingBookingSystemAPI.Models.Car", null)
+                        .WithMany("Reservations")
+                        .HasForeignKey("CarId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("ParkingBookingSystemAPI.Models.Parking", null)
                         .WithMany("Reservations")
                         .HasForeignKey("ParkingId")
@@ -407,6 +418,11 @@ namespace ParkingBookingSystemAPI.Migrations
                 {
                     b.Navigation("Cars");
 
+                    b.Navigation("Reservations");
+                });
+
+            modelBuilder.Entity("ParkingBookingSystemAPI.Models.Car", b =>
+                {
                     b.Navigation("Reservations");
                 });
 
