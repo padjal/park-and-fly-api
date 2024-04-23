@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 using ParkingBookingSystemAPI.Models;
@@ -11,9 +12,11 @@ using ParkingBookingSystemAPI.Models;
 namespace ParkingBookingSystemAPI.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240423191617_RemoveUserFromReservation")]
+    partial class RemoveUserFromReservation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -232,9 +235,6 @@ namespace ParkingBookingSystemAPI.Migrations
                     b.Property<string>("RegistrationNumber")
                         .HasColumnType("text");
 
-                    b.Property<string>("ApplicationUserId")
-                        .HasColumnType("text");
-
                     b.Property<string>("Brand")
                         .HasColumnType("text");
 
@@ -250,7 +250,7 @@ namespace ParkingBookingSystemAPI.Migrations
 
                     b.HasKey("RegistrationNumber");
 
-                    b.HasIndex("ApplicationUserId");
+                    b.HasIndex("OwnerId");
 
                     b.ToTable("Cars");
                 });
@@ -327,6 +327,8 @@ namespace ParkingBookingSystemAPI.Migrations
 
                     b.HasIndex("ApplicationUserId");
 
+                    b.HasIndex("CarId");
+
                     b.HasIndex("ParkingId");
 
                     b.ToTable("Reservations");
@@ -385,9 +387,13 @@ namespace ParkingBookingSystemAPI.Migrations
 
             modelBuilder.Entity("ParkingBookingSystemAPI.Models.Car", b =>
                 {
-                    b.HasOne("ParkingBookingSystemAPI.Models.ApplicationUser", null)
+                    b.HasOne("ParkingBookingSystemAPI.Models.ApplicationUser", "Owner")
                         .WithMany("Cars")
-                        .HasForeignKey("ApplicationUserId");
+                        .HasForeignKey("OwnerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Owner");
                 });
 
             modelBuilder.Entity("ParkingBookingSystemAPI.Models.Reservation", b =>
@@ -396,17 +402,32 @@ namespace ParkingBookingSystemAPI.Migrations
                         .WithMany("Reservations")
                         .HasForeignKey("ApplicationUserId");
 
-                    b.HasOne("ParkingBookingSystemAPI.Models.Parking", null)
+                    b.HasOne("ParkingBookingSystemAPI.Models.Car", "Car")
+                        .WithMany("Reservations")
+                        .HasForeignKey("CarId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("ParkingBookingSystemAPI.Models.Parking", "Parking")
                         .WithMany("Reservations")
                         .HasForeignKey("ParkingId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+
+                    b.Navigation("Car");
+
+                    b.Navigation("Parking");
                 });
 
             modelBuilder.Entity("ParkingBookingSystemAPI.Models.ApplicationUser", b =>
                 {
                     b.Navigation("Cars");
 
+                    b.Navigation("Reservations");
+                });
+
+            modelBuilder.Entity("ParkingBookingSystemAPI.Models.Car", b =>
+                {
                     b.Navigation("Reservations");
                 });
 

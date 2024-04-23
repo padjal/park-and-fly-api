@@ -27,15 +27,24 @@ namespace ParkingBookingSystemAPI.Controllers
 
         // GET: api/Reservation
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ReservationDto>>> GetReservations()
+        public async Task<ActionResult<IEnumerable<Reservation>>> GetReservations(int? parkingId)
         {
-            var reservations = await _context.Reservations.ToListAsync();
+            if(parkingId == null)
+            {
+                return await _context.Reservations.ToListAsync();
+            }
 
-            var dtos = reservations.Select(r => r.ToDto()).ToList();
-
-            return dtos;
+            return await _context.Reservations.Where(r => r.ParkingId==parkingId) .ToListAsync();
         }
 
+        /*[HttpGet("{parkingId:int}")]
+        public async Task<ActionResult<IEnumerable<Reservation>>> GetReservationsByParking([FromQuery] int parkingId)
+        {
+            var reservations = await _context.Reservations.Where(r => r.ParkingId == parkingId).ToListAsync();
+
+            return reservations;
+        }*/
+            
         // GET: api/Reservation/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ReservationDto>> GetReservation(string id)
@@ -101,6 +110,14 @@ namespace ParkingBookingSystemAPI.Controllers
 
             _context.Reservations.Add(reservation);
 
+            //Check if parking exists
+            var foundParking = await _context.Parkings.SingleOrDefaultAsync(p => p.Id  == reservationDto.ParkingId);
+
+            if (foundParking == null)
+            {
+                return BadRequest("Parking with this id not found.");
+            }
+
             try
             {
                 await _context.SaveChangesAsync();
@@ -111,7 +128,7 @@ namespace ParkingBookingSystemAPI.Controllers
                 return null;
             }
 
-            return CreatedAtAction("GetReservation", new { id = reservation.Id }, reservation);
+            return Ok();
         }
 
         // DELETE: api/Reservations/5

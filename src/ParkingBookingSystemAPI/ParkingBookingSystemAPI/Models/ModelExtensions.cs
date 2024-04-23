@@ -33,7 +33,8 @@ namespace ParkingBookingSystemAPI.Models
             {
                 RegistrationNumber = carRequest.RegistrationNumber,
                 Color = carRequest.Color,
-                Type = carRequest.Type,
+                Brand = carRequest.Brand,
+                Model = carRequest.Model,
                 OwnerId = userId,
             };
         }
@@ -46,6 +47,8 @@ namespace ParkingBookingSystemAPI.Models
                 Address = parkingRequest.Address,
                 City = parkingRequest.City,
                 Country = parkingRequest.Country,
+                Latitude = parkingRequest.Latitude,
+                Longitute = parkingRequest.Longitute,
                 Phone = parkingRequest.Phone,
                 MaxCars = parkingRequest.MaxCars
             };

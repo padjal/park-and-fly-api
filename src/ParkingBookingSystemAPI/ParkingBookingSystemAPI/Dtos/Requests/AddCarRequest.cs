@@ -7,9 +7,8 @@ namespace ParkingBookingSystemAPI.Dtos.Requests
     public record AddCarRequest
     {
         public string RegistrationNumber { get; set; }
-
         public string Color { get; set; }
-
-        public string Type { get; set; }
+        public string Brand { get; set; }
+        public string Model { get; set; }
     }
 }
