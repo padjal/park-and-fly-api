@@ -9,6 +9,8 @@ namespace ParkingBookingSystemAPI
     {
         public static void Main(string[] args)
         {
+            var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
             var builder = WebApplication.CreateBuilder(args);
 
             //Real db
@@ -57,6 +59,16 @@ namespace ParkingBookingSystemAPI
                 });
             });
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy(name: MyAllowSpecificOrigins,
+                                  policy =>
+                                  {
+                                      policy.WithOrigins("http://localhost",
+                                                          "*");
+                                  });
+            });
+
             var app = builder.Build();
 
             app.MapIdentityApi<ApplicationUser>();
@@ -82,6 +94,8 @@ namespace ParkingBookingSystemAPI
             app.UseAuthorization();
 
             app.MapControllers();
+            app.UseRouting();
+            app.UseCors(MyAllowSpecificOrigins);
 
             app.Run();
         }
