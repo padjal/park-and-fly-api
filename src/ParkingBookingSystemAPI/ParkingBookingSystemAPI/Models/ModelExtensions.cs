@@ -48,7 +48,7 @@ namespace ParkingBookingSystemAPI.Models
                 City = parkingRequest.City,
                 Country = parkingRequest.Country,
                 Latitude = parkingRequest.Latitude,
-                Longitute = parkingRequest.Longitute,
+                Longitude = parkingRequest.Longitude,
                 Phone = parkingRequest.Phone,
                 MaxCars = parkingRequest.MaxCars
             };
