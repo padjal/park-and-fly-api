@@ -48,5 +48,22 @@ namespace ParkingBookingSystemAPI.Controllers
 
             return true;
         }
+
+        [HttpDelete("{parkingId}")]
+        public async Task<IActionResult> DeleteParkingById(int parkingId)
+        {
+            try
+            {
+                var parking = await _context.Parkings.FirstOrDefaultAsync(p => p.Id == parkingId);
+
+                _context.Parkings.Remove(parking);
+
+                return Ok();
+            }catch
+            {
+                return BadRequest();
+            }
+            
+        }
     }
 }

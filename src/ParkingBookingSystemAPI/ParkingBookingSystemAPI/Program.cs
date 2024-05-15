@@ -69,6 +69,9 @@ namespace ParkingBookingSystemAPI
                 });
             });
 
+            builder.Logging.ClearProviders();
+            builder.Logging.AddConsole();
+
             var app = builder.Build();
 
             app.MapIdentityApi<ApplicationUser>();
