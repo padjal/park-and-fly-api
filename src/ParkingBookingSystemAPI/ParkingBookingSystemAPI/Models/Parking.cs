@@ -17,5 +17,6 @@ namespace ParkingBookingSystemAPI.Models
         public string Phone { get; set; }
         public int MaxCars { get; set; }
         public ICollection<Reservation> Reservations { get; set; }
+        public double PricePerDay { get; set; }
     }
 }

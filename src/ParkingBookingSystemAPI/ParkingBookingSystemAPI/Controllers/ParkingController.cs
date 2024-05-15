@@ -25,6 +25,12 @@ namespace ParkingBookingSystemAPI.Controllers
             return await _context.Parkings.ToListAsync();
         }
 
+        [HttpGet("{parkingId}")]
+        public async Task<ActionResult<Parking>> GetParkingById(int parkingId)
+        {
+            return await _context.Parkings.Where(p => p.Id == parkingId).FirstOrDefaultAsync();
+        }
+
         [HttpPost]
         public async Task<bool> AddParking(AddParkingRequest parkingRequest) { 
 
