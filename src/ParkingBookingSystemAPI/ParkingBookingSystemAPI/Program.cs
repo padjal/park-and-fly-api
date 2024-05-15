@@ -61,13 +61,12 @@ namespace ParkingBookingSystemAPI
 
             builder.Services.AddCors(options =>
             {
-                options.AddPolicy(name: MyAllowSpecificOrigins,
-                                  policy =>
-                                  {
-                                      policy.WithOrigins("http://localhost:5109",
-                                                         "http://34.155.32.32:8080",
-                                                         "*");
-                                  });
+                options.AddDefaultPolicy(policy =>
+                {
+                    policy.AllowAnyOrigin()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
+                });
             });
 
             var app = builder.Build();
@@ -91,12 +90,14 @@ namespace ParkingBookingSystemAPI
                 app.UseExceptionHandler("/error");
             }
 
-            app.UseCors(MyAllowSpecificOrigins);
+            app.UseRouting();
+
+            //app.UseCors(MyAllowSpecificOrigins);
+            app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();
-            app.UseRouting();
 
             app.Run();
         }
