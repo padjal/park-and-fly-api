@@ -6,6 +6,7 @@
         string City,
         string Country,
         string Phone,
-        int MaxCars
+        int MaxCars,
+        double PricePerDay
         );
 }

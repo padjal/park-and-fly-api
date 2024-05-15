@@ -4,6 +4,8 @@
         int ParkingId,
         string CarId,
         DateTime From,
-        DateTime To
+        DateTime To, 
+        bool IsPaid, 
+        double Price
         );
 }
