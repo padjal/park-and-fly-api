@@ -13,5 +13,7 @@ namespace ParkingBookingSystemAPI.Models
         public string CarId { get; set; }
         public DateTime From { get; set; }
         public DateTime To { get; set; }
+        public bool IsPaid { get; set; }
+        public double Price { get; set; }
     }
 }
