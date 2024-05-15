@@ -90,12 +90,14 @@ namespace ParkingBookingSystemAPI
                 app.UseExceptionHandler("/error");
             }
 
-            app.UseCors(MyAllowSpecificOrigins);
+            app.UseRouting();
+
+            //app.UseCors(MyAllowSpecificOrigins);
+            app.UseCors();
             app.UseAuthentication();
             app.UseAuthorization();
 
             app.MapControllers();
-            app.UseRouting();
 
             app.Run();
         }
