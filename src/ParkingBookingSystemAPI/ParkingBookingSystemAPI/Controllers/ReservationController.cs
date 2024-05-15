@@ -19,10 +19,12 @@ namespace ParkingBookingSystemAPI.Controllers
     public class ReservationController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly ILogger _logger;
 
-        public ReservationController(ApplicationDbContext context)
+        public ReservationController(ApplicationDbContext context, ILogger<ReservationController> logger)
         {
             _context = context;
+            _logger = logger;
         }
 
         // GET: api/Reservation
@@ -49,7 +51,7 @@ namespace ParkingBookingSystemAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<ReservationDto>> GetReservation(string id)
         {
-            var reservation = await _context.Reservations.FindAsync(id);
+            var reservation = await _context.Reservations.FindAsync(new Guid(id));
 
             if (reservation == null)
             {
@@ -128,6 +130,7 @@ namespace ParkingBookingSystemAPI.Controllers
                 return null;
             }
 
+            _logger.LogInformation($"New reservation added --> {reservation}");
             return Ok();
         }
 
