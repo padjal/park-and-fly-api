@@ -27,24 +27,63 @@ namespace ParkingBookingSystemAPI.Controllers
 
         // GET: api/Reservation
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Reservation>>> GetReservations(int? parkingId)
+        public async Task<ActionResult<IEnumerable<Reservation>>> GetReservations(int? parkingId, DateTime? startTime, DateTime? endTime)
         {
-            if(parkingId == null)
+            if (startTime == null)
             {
-                return await _context.Reservations.ToListAsync();
+                startTime = DateTime.MinValue;
             }
 
-            return await _context.Reservations.Where(r => r.ParkingId==parkingId) .ToListAsync();
+            if (endTime == null)
+            {
+                endTime = DateTime.MaxValue;
+            }
+
+            if (parkingId == null)
+            {
+                return await _context.Reservations
+                    .Where(r => r.From >= startTime &&
+                       r.To <= endTime)
+                    .ToListAsync();
+            }
+
+            return await _context.Reservations
+                .Where(r => r.ParkingId == parkingId &&
+                       r.From >= startTime &&
+                       r.To <= endTime)
+                .ToListAsync();
         }
 
-        /*[HttpGet("{parkingId:int}")]
-        public async Task<ActionResult<IEnumerable<Reservation>>> GetReservationsByParking([FromQuery] int parkingId)
+        [HttpGet("available")]
+        public async Task<ActionResult<bool>> IsSlotAvalable(int parkingId, DateTime? startTime, DateTime? endTime)
         {
-            var reservations = await _context.Reservations.Where(r => r.ParkingId == parkingId).ToListAsync();
+            if (parkingId == 0 || startTime == null || endTime == null)
+            {
+                return BadRequest("Check request parameters.");
+            }
+            var parking = await _context.Parkings.FirstOrDefaultAsync(p => p.Id == parkingId);
 
-            return reservations;
-        }*/
-            
+            if(parking == null)
+            {
+                return NotFound($"Parking with id {parkingId} is not found.");
+            }
+
+            return await _context.Reservations.CountAsync(r => r.ParkingId == parkingId &&
+                       r.From <= endTime &&
+                       r.To >= startTime) < parking.MaxCars;
+        }
+
+        // GET: api/Reservation
+        [HttpGet("current")]
+        public async Task<ActionResult<IEnumerable<Reservation>>> GetReservations(int parkingId, DateTime now)
+        {
+            return await _context.Reservations
+                .Where(r => r.ParkingId == parkingId &&
+                r.From <= now &&
+                r.To >= now)
+                .ToListAsync();
+        }
+
         // GET: api/Reservation/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ReservationDto>> GetReservation(string id)

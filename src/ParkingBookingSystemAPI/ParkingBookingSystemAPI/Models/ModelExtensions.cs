@@ -11,7 +11,9 @@ namespace ParkingBookingSystemAPI.Models
                 reservation.ParkingId,
                 reservation.CarId,
                 reservation.From,
-                reservation.To
+                reservation.To,
+                reservation.IsPaid,
+                reservation.Price
                 );
         }
 
@@ -24,6 +26,8 @@ namespace ParkingBookingSystemAPI.Models
                 CarId = reservationDto.CarId,
                 From = reservationDto.From,
                 To = reservationDto.To,
+                IsPaid = reservationDto.IsPaid,
+                Price = reservationDto.Price
             };
         }
 
@@ -50,7 +54,8 @@ namespace ParkingBookingSystemAPI.Models
                 Latitude = parkingRequest.Latitude,
                 Longitude = parkingRequest.Longitude,
                 Phone = parkingRequest.Phone,
-                MaxCars = parkingRequest.MaxCars
+                MaxCars = parkingRequest.MaxCars,
+                PricePerDay = parkingRequest.PricePerDay
             };
         }
     }

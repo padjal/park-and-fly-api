@@ -10,5 +10,6 @@
         public double Longitude { get; set; }
         public string Phone { get; set; }
         public int MaxCars { get; set; }
+        public double PricePerDay { get; set; }
     }
 }
